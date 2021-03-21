@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const countryISO = require('iso-3166-country-list');
 const fetch = require('node-fetch');
+const getTime = require('../../utils/getTime');
 
 module.exports = {
     name: 'weather',
@@ -23,7 +24,6 @@ module.exports = {
         }
 
         const query = `https://api.openweathermap.org/data/2.5/weather?${new URLSearchParams({q, appid: api_key})}`;
-        let dataJSON;
 
         fetch(query).then(response => {
             if(!response.ok) {
@@ -36,23 +36,27 @@ module.exports = {
             const temperature = {
                 kelvin: data.main.temp,
                 celsius: (data.main.temp - 273.15).toFixed(2),
-                fahrenheit: (data.main.temp * (9/5) - 459.67).toFixed(2)
+                fahrenheit: (data.main.temp * (9/5) - 459.67).toFixed(2),
+                feelsLike: {
+                    kelvin: data.main.feels_like,
+                    celsius: (data.main.feels_like - 273.15).toFixed(2),
+                    fahrenheit: (data.main.feels_like * (9/5) - 459.67).toFixed(2)
+                }
             }
 
             const embed = new Discord.MessageEmbed()
-                                    .setAuthor(msg.author.tag, msg.author.displayAvatarURL())
-                                    .setTitle(data.name)
+                                    .setTitle(`${data.name}, ${countryISO.name(data.sys.country)}`)
                                     .addFields(
-                                        { name: 'Temperature', value: `${temperature.celsius}°C, ${temperature.fahrenheit}°F`, inline: true },
-                                        { name: 'Pressure', value: `${data.main.pressure}hPa`, inline: true },
-                                        { name: 'Humidity', value: `${data.main.humidity}%`, inline: true }
+                                        { name: '🌡️ Temperature data', value: `${temperature.celsius}°C ( Feels like ${temperature.feelsLike.celsius}°C )\n${temperature.fahrenheit}°C ( Feels like ${temperature.feelsLike.fahrenheit}°F )`, inline: true },
+                                        { name: '🌥️ Atmospheric data', value: `Humidity: ${data.main.humidity}%\nPressure: ${data.main.pressure}hPa\nVisibility: ${data.visibility} meters`, inline: true },
+                                        { name: '🕛 Time data', value: `Sunrise: ${getTime(data.sys.sunrise)}\nSunset: ${getTime(data.sys.sunset)}`, inline: false }
                                     )
-                                    .setColor('')
+                                    .setColor('2F3136')
                                     .setTimestamp();
                     
             return msg.channel.send(embed);
         }).catch(error => {
-            msg.reply(`An error occured while fetching data.`);
+            msg.reply(`An error occured while fetching data. ( Make sure that you provided valid city name )`);
 
             console.log(error);
         });
