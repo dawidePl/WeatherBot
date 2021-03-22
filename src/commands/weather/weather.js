@@ -1,29 +1,20 @@
 const Discord = require('discord.js');
 const countryISO = require('iso-3166-country-list');
 const fetch = require('node-fetch');
-const getTime = require('../../utils/getTime');
 
 module.exports = {
     name: 'weather',
     description: 'Show weather at current location',
-    usage: '<city> [country]',
+    usage: '<city>',
     args: true,
     async execute(msg, args) {
-        let q = args[0];
-        let isoCountryCode;
-        const api_key = 'aa76b4a8bd86eda5b2c96a144201cf69';
-        
-        if(args[1]) {
-            isoCountryCode = countryISO.code(args[1]);
+        let q = args.join('%20');
 
-            if(isoCountryCode == undefined) {
-                return msg.reply('Wrong country format. Make sure you use full country name, not it\'s shortcut name.');
-            }
+        require('dotenv-flow').config();
 
-            q += `,${isoCountryCode}`.toLowerCase();
-        }
+        const key = process.env.API_KEY;
 
-        const query = `https://api.openweathermap.org/data/2.5/weather?${new URLSearchParams({q, appid: api_key})}`;
+        const query = `https://api.weatherapi.com/v1/current.json?key=${key}&q=${q}&aqi=no`;
 
         fetch(query).then(response => {
             if(!response.ok) {
@@ -33,23 +24,12 @@ module.exports = {
             return response.json();
         })
         .then(data => {
-            const temperature = {
-                kelvin: data.main.temp,
-                celsius: (data.main.temp - 273.15).toFixed(2),
-                fahrenheit: (data.main.temp * (9/5) - 459.67).toFixed(2),
-                feelsLike: {
-                    kelvin: data.main.feels_like,
-                    celsius: (data.main.feels_like - 273.15).toFixed(2),
-                    fahrenheit: (data.main.feels_like * (9/5) - 459.67).toFixed(2)
-                }
-            }
-
             const embed = new Discord.MessageEmbed()
-                                    .setTitle(`${data.name}, ${countryISO.name(data.sys.country)}`)
+                                    .setTitle(`${data.location.name}, ${data.location.country}`)
                                     .addFields(
-                                        { name: '🌡️ Temperature data', value: `${temperature.celsius}°C ( Feels like ${temperature.feelsLike.celsius}°C )\n${temperature.fahrenheit}°C ( Feels like ${temperature.feelsLike.fahrenheit}°F )`, inline: true },
-                                        { name: '🌥️ Atmospheric data', value: `Humidity: ${data.main.humidity}%\nPressure: ${data.main.pressure}hPa\nVisibility: ${data.visibility} meters`, inline: true },
-                                        { name: '🕛 Time data', value: `Sunrise: ${getTime(data.sys.sunrise)}\nSunset: ${getTime(data.sys.sunset)}`, inline: false }
+                                        { name: '🌡️ Temperature data     ', value: `${data.current.temp_c}°C\n${data.current.temp_f}°F`, inline: true },
+                                        { name: '🌥️ Atmospheric data', value: `Humidity: ${data.current.humidity}%\nPressure: ${data.current.pressure_mb} hPa\nVisibility: ${data.current.vis_km} kilometers ( ${data.current.vis_miles} miles )`, inline: true },
+                                        { name: '🕛 Time date', value: `Local date: ${data.location.localtime.split(' ')[0]}\nLocal time: ${data.location.localtime.split(' ')[1]}`, inline: false }
                                     )
                                     .setColor('2F3136')
                                     .setTimestamp();
