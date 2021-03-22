@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
+const getData = require('../../utils/getEnvVars');
 
 module.exports = {
     name: 'weather',
@@ -8,10 +9,7 @@ module.exports = {
     args: true,
     async execute(msg, args) {
         let q = args.join('%20');
-
-        require('dotenv-flow').config();
-
-        const key = process.env.API_KEY;
+        const key = getData(false, 'api_key');
 
         const query = `https://api.weatherapi.com/v1/current.json?key=${key}&q=${q}&aqi=no`;
 
@@ -28,8 +26,9 @@ module.exports = {
                                     .addFields(
                                         { name: '🌡️ Temperature data     ', value: `${data.current.temp_c}°C\n${data.current.temp_f}°F`, inline: true },
                                         { name: '🌥️ Atmospheric data', value: `Humidity: ${data.current.humidity}%\nPressure: ${data.current.pressure_mb} hPa\nVisibility: ${data.current.vis_km} kilometers ( ${data.current.vis_miles} miles )`, inline: true },
-                                        { name: '🕛 Time date', value: `Local date: ${data.location.localtime.split(' ')[0]}\nLocal time: ${data.location.localtime.split(' ')[1]}`, inline: false }
+                                        { name: '🕛 Time date', value: `Local date: ${data.location.localtime.split(' ')[0].split('-').join('.')}\nLocal time: ${data.location.localtime.split(' ')[1]} ( 24 hour clock )`, inline: false }
                                     )
+                                    .setThumbnail(`https:${data.current.condition.icon}`)
                                     .setColor('2F3136')
                                     .setTimestamp();
                     

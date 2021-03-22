@@ -1,8 +1,8 @@
 const Discord = require('discord.js');
 const fs = require('fs');
+const getData = require('./utils/getEnvVars');
 
 const client = new Discord.Client();
-require('dotenv-flow').config();
 
 client.commands = new Discord.Collection();
 client.cooldowns = new Discord.Collection();
@@ -19,16 +19,11 @@ for(const folder of commandFolders) {
     }
 }
 
-const config = {
-    token: process.env.TOKEN,
-    prefix: process.env.PREFIX,
-    developersID: process.env.developersID.split(' '),
-    api_key: process.env.API_KEY
-}
-
 client.on('ready', () => {
     console.log(`Logged as ${client.user.tag}`);
 })
+
+const config = getData(true, '');
 
 client.on('message', msg => {
     if(msg.content === /<@!$822848534658547713>/) return msg.channel.send(`Hi! My prefix is \`${config.prefix}\``);
