@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const countryISO = require('iso-3166-country-list');
 const fetch = require('node-fetch');
 
 module.exports = {
