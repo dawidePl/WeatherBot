@@ -4,6 +4,8 @@ const fs = require('fs');
 module.exports = {
     name: 'reload',
     args: true,
+    usage: 'reload <command>',
+    type: 'developer',
     devOnly: true,
     execute(msg, args) {
         const commandName = args[0].toLowerCase();
