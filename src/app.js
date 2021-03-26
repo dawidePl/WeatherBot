@@ -5,9 +5,11 @@ const getData = require('./utils/getEnvVars');
 const client = new Discord.Client();
 
 client.commands = new Discord.Collection();
+client.slashCommands = new Discord.Collection();
 client.cooldowns = new Discord.Collection();
 
 const commandFolders = fs.readdirSync('./commands');
+const sCommandFiles = fs.readdirSync('./slash_commands').filter(file => file.endsWith('.js'));
 
 for(const folder of commandFolders) {
     const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
@@ -19,8 +21,30 @@ for(const folder of commandFolders) {
     }
 }
 
-client.on('ready', () => {
+for(const file of sCommandFiles) {
+    const command = require(`./slash_commands/${file}`);
+
+    client.slashCommands.set(command.name, command);
+}
+
+const slashCommandsHandler = require('./utils/slashCommandsHandler');
+
+client.on('ready', async () => {
     console.log(`Logged as ${client.user.tag}`);
+
+    client.api.applications(client.user.id).commands.post({data: {
+        name: 'help',
+        description: 'Sends all available commands.',
+        options: [
+            {
+                "name": "command",
+                "description": "Name of city you want to check weather of.",
+                "type": 3
+            }
+        ]
+    }})
+
+    slashCommandsHandler(client);
 })
 
 const config = getData(true, '');
