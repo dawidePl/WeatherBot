@@ -33,12 +33,19 @@ client.on('ready', async () => {
     console.log(`Logged as ${client.user.tag}`);
 
     client.api.applications(client.user.id).commands.post({data: {
-        name: 'help',
-        description: 'Sends all available commands.',
+        name: 'forecast',
+        description: 'Forecast for given location at given time.',
         options: [
             {
-                "name": "command",
+                "name": "city",
                 "description": "Name of city you want to check weather of.",
+                "required": true,
+                "type": 3
+            },
+            {
+                "name": "days",
+                "description": "Days you want to check forecast since today. Start counting from 2.",
+                "required": true,
                 "type": 3
             }
         ]
