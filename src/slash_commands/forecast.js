@@ -8,7 +8,6 @@ module.exports = {
     usage: 'forecast <city> <days since now>',
     type: 'weather',
     note: 'Please specify \`days\` field starting from \`2\`. Typing there \`1\` will result in current day forecast.',
-    args: false,
     async execute(interaction, client) {
         let response, args = [];
 
@@ -22,34 +21,32 @@ module.exports = {
         const res = await fetch(query);
         const data = await res.json();
 
-        const day = parseInt(args[1]);
+        const index = parseInt(args[1]) - 1;
 
-        if(data && day > 0) {
-            try {
-                const index = day - 1;
-
+        if(!data.error) {
+            if(index > 0 && index < 5) {
                 const dataShort = data.forecast.forecastday[index].day;
-    
+
                 response = new Discord.MessageEmbed()
-                                .setTitle(`${data.location.name}, ${data.location.country}`)
-                                .setDescription(`Forecast for ${data.forecast.forecastday[index].date}`)
-                                .addFields(
-                                    { name: '🌡️ Temperature data', value: `Average temperature: ${dataShort.avgtemp_c}°C\nAverage temperature: ${dataShort.avgtemp_f}°F`, inline: true },
-                                    { name: '🌥️ Atmospheric data', value: `Humidity: ${data.current.humidity}%\nAverage visibility: ${dataShort.avgvis_km} kilometers ( ${dataShort.avgvis_miles} miles )`, inline: true },
-                                    { name: '💨 Wind data', value: `Max wind speed: ${dataShort.maxwind_kph} km/h ( ${dataShort.maxwind_mph} mph )`, inline: false }
-                                )
-                                .setThumbnail(`https:${dataShort.condition.icon}`)
-                                .setColor('2F3136')
-                                .setTimestamp();
-            }catch{error => {
+                                    .setTitle(`${data.location.name}, ${data.location.country}`)
+                                    .setDescription(`Forecast for ${data.forecast.forecastday[index].date}`)
+                                    .addFields(
+                                        { name: '🌡️ Temperature data', value: `Average temperature: ${dataShort.avgtemp_c}°C (  ${dataShort.avgtemp_f}°F )\nMinimal temperature: ${dataShort.mintemp_c}°C ( ${dataShort.mintemp_f}°F )\nMaximal temperature: ${dataShort.maxtemp_c}°C ( ${dataShort.maxtemp_f}°F )`, inline: false },
+                                        { name: '🌥️ Atmospheric data', value: `Average humidity: ${dataShort.avghumidity}%\nAverage visibility: ${dataShort.avgvis_km} kilometers ( ${dataShort.avgvis_miles} miles )`, inline: false },
+                                        { name: '💨 Wind data', value: `Max wind speed: ${dataShort.maxwind_kph} km/h ( ${dataShort.maxwind_mph} mph )`, inline: false }
+                                    )
+                                    .setThumbnail(`https:${dataShort.condition.icon}`)
+                                    .setColor('2F3136');
+
+            }else {
                 response = new Discord.MessageEmbed()
-                                .setAuthor(client.user.tag, client.user.displayAvatarURL())
-                                .setDescription(`Make sure that \`days\` field is between 1 and 12 and that you provided correct city name.`);
-            }}
+                                    .setDescription(`Please select time from 2 to 10 days. Keep in mind that \`1\` will show forecast for current day.`)
+                                    .setColor('2F3136');
+            }
         }else {
             response = new Discord.MessageEmbed()
-                                    .setAuthor(client.user.tag, client.user.displayAvatarURL())
-                                    .setDescription(`Make sure that \`days\` field is between 1 and 12 and that you provided correct city name.`);
+                                .setDescription(`Please provide correct city name.`)
+                                .setColor('2F3136');
         }
 
         return client.api.interactions[interaction.id][interaction.token].callback.post({data: {
