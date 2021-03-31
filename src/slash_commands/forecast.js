@@ -24,7 +24,7 @@ module.exports = {
         const index = parseInt(args[1]) - 1;
 
         if(!data.error) {
-            if(index > 1 && index < 5) {
+            if(index > 0 && index < 5) {
                 const dataShort = data.forecast.forecastday[index].day;
 
                 response = new Discord.MessageEmbed()

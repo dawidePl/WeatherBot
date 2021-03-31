@@ -45,10 +45,10 @@ module.exports = {
                                 .setTitle(`${data.location.name}, ${data.location.country}`)
                                 .addFields(
                                     { name: 'Temperature data 🌡️', value: `Current temperature: ${data.current.temp_c}°C ( ${data.current.temp_f}°F )\nFeels like: ${data.current.feelslike_c}°C ( ${data.current.feelslike_f}°F )`, inline: true },
-                                    { name: 'Environmental data 🌥️', value: `Wind speed: ${data.current.wind_kph} kph ( ${data.current.wind_mph} mph )\nWind direction: ${wind_direction[data.current.wind_dir]} ( ${data.current.wind_degree}° )\nPressure: ${data.current.pressure_mb} milibars ( ${data.current.pressure_in} inches )\nPrecipitation: ${data.current.precip_mm} mm ( ${data.current.precip_in} inches )\Humidity: ${data.current.humidity}%\nCloud coverage: ${data.current.cloud}%\nVisibility: ${data.current.vis_km} km ( ${data.current.vis_miles} miles )`, inline: false },
+                                    { name: 'Environmental data 🌥️', value: `Wind speed: ${data.current.wind_kph} kph ( ${data.current.wind_mph} mph )\nWind direction: ${wind_direction[data.current.wind_dir]} ( ${data.current.wind_degree}° )\nPressure: ${data.current.pressure_mb} milibars ( ${data.current.pressure_in} inches )\nPrecipitation: ${data.current.precip_mm} mm ( ${data.current.precip_in} inches )\nHumidity: ${data.current.humidity}%\nCloud coverage: ${data.current.cloud}%\nVisibility: ${data.current.vis_km} km ( ${data.current.vis_miles} miles )`, inline: false },
                                     { name: 'Time data 🕙', value: `Local date: ${data.location.localtime.split(' ')[0]}\nLocal time: ${data.location.localtime.split(' ')[1]}` }
                                 )
-                                .setThumbnail(`https://${data.current.condition.icon}`)
+                                .setThumbnail(`https:${data.current.condition.icon}`)
                                 .setColor('2F3136')
                                 .setTimestamp();
         }else {
