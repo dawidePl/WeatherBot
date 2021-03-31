@@ -24,7 +24,7 @@ module.exports = {
         const index = parseInt(args[1]) - 1;
 
         if(!data.error) {
-            if(index > 0 && index < 5) {
+            if(index > 1 && index < 5) {
                 const dataShort = data.forecast.forecastday[index].day;
 
                 response = new Discord.MessageEmbed()
@@ -40,7 +40,7 @@ module.exports = {
 
             }else {
                 response = new Discord.MessageEmbed()
-                                    .setDescription(`Please select time from 2 to 10 days. Keep in mind that \`1\` will show forecast for current day.`)
+                                    .setDescription(`Please select time from 2 to 4 days. Keep in mind that \`1\` will show forecast for current day.`)
                                     .setColor('2F3136');
             }
         }else {
