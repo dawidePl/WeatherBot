@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const getData = require('../utils/getEnvVars');
 
 module.exports = {
     name: 'help',
@@ -13,6 +14,8 @@ module.exports = {
                 args.push(option.value);
             });
         }
+
+        const prefix = getData(false, 'prefix');
 
         if(args.length) {
             const command = client.slashCommands.get(args[0]);

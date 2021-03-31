@@ -19,6 +19,13 @@ const slashCommandsHandler = require('./utils/slashCommandsHandler');
 client.on('ready', async () => {
     console.log(`Logged as ${client.user.tag}`);
 
+    slashCommandsHandler(client);
+})
+
+const config = getData(true, '');
+
+client.login(config.token);
+
     // client.api.applications(client.user.id).commands.post({data: {
     //     name: 'weather',
     //     description: 'Check weather for any location.',
@@ -31,10 +38,3 @@ client.on('ready', async () => {
     //         }
     //     ]
     // }})
-
-    slashCommandsHandler(client);
-})
-
-const config = getData(true, '');
-
-client.login(config.token);
