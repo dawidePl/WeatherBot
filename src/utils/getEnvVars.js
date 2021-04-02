@@ -1,8 +1,7 @@
-require('dotenv-flow').config();
+const dotenv = require('dotenv').config();
 
 const config = {
     token: process.env.TOKEN,
-    prefix: process.env.PREFIX,
     developersID: process.env.developersID.split(' '),
     api_key: process.env.API_KEY
 }

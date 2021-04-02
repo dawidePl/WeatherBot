@@ -19,7 +19,7 @@
   "homepage": "https://github.com/dawidePl/WeatherBot#readme",
   "dependencies": {
     "discord.js": "^12.5.1",
-    "dotenv-flow": "^3.2.0",
+    "dotenv": "^8.2.0",
     "node-fetch": "^2.6.1",
     "quick.db": "^7.1.3",
     "typescript": "^4.2.3"
