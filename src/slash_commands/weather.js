@@ -43,6 +43,7 @@ module.exports = {
 
             response = new Discord.MessageEmbed()
                                 .setTitle(`${data.location.name}, ${data.location.country}`)
+                                .setDescription(`**Short note about weather:** ${data.current.condition.text}`)
                                 .addFields(
                                     { name: 'Temperature data 🌡️', value: `Current temperature: ${data.current.temp_c}°C ( ${data.current.temp_f}°F )\nFeels like: ${data.current.feelslike_c}°C ( ${data.current.feelslike_f}°F )`, inline: true },
                                     { name: 'Environmental data 🌥️', value: `Wind speed: ${data.current.wind_kph} kph ( ${data.current.wind_mph} mph )\nWind direction: ${wind_direction[data.current.wind_dir]} ( ${data.current.wind_degree}° )\nPressure: ${data.current.pressure_mb} milibars ( ${data.current.pressure_in} inches )\nPrecipitation: ${data.current.precip_mm} mm ( ${data.current.precip_in} inches )\nHumidity: ${data.current.humidity}%\nCloud coverage: ${data.current.cloud}%\nVisibility: ${data.current.vis_km} km ( ${data.current.vis_miles} miles )`, inline: false },

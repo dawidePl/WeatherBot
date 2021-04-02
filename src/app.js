@@ -26,15 +26,25 @@ const config = getData(true, '');
 
 client.login(config.token);
 
-    // client.api.applications(client.user.id).commands.post({data: {
-    //     name: 'weather',
-    //     description: 'Check weather for any location.',
-    //     options: [
-    //         {
-    //             "name": "city",
-    //             "description": "Name of city you want to check weather of.",
-    //             "required": true,
-    //             "type": 3
-    //         }
-    //     ]
-    // }})
+// client.api.applications(client.user.id).commands.post({data: {
+//     name: 'weather',
+//     description: 'Check weather for any location.',
+//     options: [
+//         {
+//             "name": "city",
+//             "description": "Name of city you want to check weather of.",
+//             "required": true,
+//             "type": 3,
+//             "choices": [
+//                 {
+//                     "name": "x",
+//                     "value": 1
+//                 },
+//                 {
+//                     "name": "y",
+//                     "value": 2
+//                 }
+//             ]
+//         }
+//     ]
+// }})
