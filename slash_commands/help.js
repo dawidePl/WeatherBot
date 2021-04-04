@@ -43,6 +43,7 @@ module.exports = {
 
             response = new Discord.MessageEmbed()
                                 .setAuthor(client.user.tag, client.user.displayAvatarURL())
+                                .setTitle('Available commands')
                                 .setDescription(answer)
                                 .setColor('2F3136')
                                 .setTimestamp();
