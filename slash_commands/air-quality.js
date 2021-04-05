@@ -22,16 +22,25 @@ module.exports = {
         const data = await res.json();
 
         if(!data.error) {
+            const indexes = {
+                1: 'Good',
+                2: 'Moderate',
+                3: 'Unhealthy for sensitive people',
+                4: 'Unhealthy for most of people',
+                5: 'Very unhealthy',
+                6: 'Hazardous'
+            }
+
             response = new Discord.MessageEmbed()
                                 .setTitle(`${data.location.name}, ${data.location.country}`)
-                                .setDescription(`${data.current.air_quality.us-epa-index} US - EPA Standard.`)
+                                .setDescription(`**${data.current.air_quality['us-epa-index']}** ( **${indexes[data.current.air_quality['us-epa-index']]}** ) in US - EPA Standard.`)
                                 .addFields(
-                                    { name: 'Carbon monoxide ( CO )', value: `${data.current.air_quality.co} μg/m3`, inline: true },
-                                    { name: 'Nitrogen dioxide ( NO2 )', value: `${data.current.air_quality.no2} μg/m3`, inline: true },
-                                    { name: 'Ozone ( O3 )', value: `${data.current.air_quality.o3} μg/m3`, inline: true },
-                                    { name: 'Sulphur dioxide ( SO2 )', value: `${data.current.air_quality.so2} μg/m3`, inline: true },
-                                    { name: 'PM 2,5', value: `${data.current.air_quality.pm2_5} μg/m3`, inline: true },
-                                    { name: 'PM 10', value: `${data.current.air_quality.pm10} μg/m3`, inline: true }
+                                    { name: 'Carbon monoxide ( CO )', value: `${data.current.air_quality.co.toFixed(3)} μg/m3`, inline: true },
+                                    { name: 'Nitrogen dioxide ( NO2 )', value: `${data.current.air_quality.no2.toFixed(3)} μg/m3`, inline: true },
+                                    { name: 'Ozone ( O3 )', value: `${data.current.air_quality.o3.toFixed(3)} μg/m3`, inline: true },
+                                    { name: 'Sulphur dioxide ( SO2 )', value: `${data.current.air_quality.so2.toFixed(3)} μg/m3`, inline: true },
+                                    { name: 'PM 2,5', value: `${data.current.air_quality.pm2_5.toFixed(3)} μg/m3`, inline: true },
+                                    { name: 'PM 10', value: `${data.current.air_quality.pm10.toFixed(3)} μg/m3`, inline: true }
                                 )
                                 .setColor('2F3136')
                                 .setTimestamp();
